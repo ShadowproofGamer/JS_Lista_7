@@ -3,6 +3,11 @@
 # z1 a
 def acronim(lista):
     def acronim_rec(remaining, result):
+        return result if len(remaining)==0 else acronim_rec(remaining[1::], result+remaining[0][0])
+    return acronim_rec(lista, "")
+
+def acronim_v2(lista):
+    def acronim_rec(remaining, result):
         try:
             return acronim_rec(remaining[1::], result+remaining[0][0])
         except:
@@ -11,6 +16,11 @@ def acronim(lista):
 
 # z1 b
 def median(lista):
+    def median_rec(remaining, result):
+        return result if len(remaining)==0 else median_rec(remaining[1:-1:], result=float(remaining[0]+remaining[-1])/2)
+    return median_rec(lista, 0)
+
+def median_v2(lista):
     def median_rec(remaining, result):
         try:
             return median_rec(remaining[1:-1:], result=float(remaining[0]+remaining[-1])/2)
