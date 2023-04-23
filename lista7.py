@@ -127,12 +127,14 @@ z4_geometric_progression = lambda n: n*n
 
 # z5 - TODO
 from functools import cache
-@cache
 def make_generator_mem(f):
+    @cache
+    def memoized_f(n):
+        return f(n)
     def generator():
         i=1
         while True:
-            yield f(i)
+            yield memoized_f(i)
             i+=1
     return generator
 
@@ -265,9 +267,9 @@ for w in gen1:
 
 #z4 b
 print("\niterator (lambda ciągu geometrycznego):")
-gen1 = make_generator(z4_geometric_progression)()
+gen2 = make_generator(z4_geometric_progression)()
 z4_i = 1
-for w in gen1:
+for w in gen2:
     print(w)
     if z4_i>=10:
         break
@@ -276,8 +278,16 @@ for w in gen1:
 
 
 
-#z5 - TODO
-
+#z5
+print("\niterator (funkcja ciągu fibonacciego):")
+gen3 = make_generator_mem(fibonacci)()
+z4_i = 1
+for w in gen1:
+    print(w)
+    if z4_i>=10:
+        break
+    else:
+        z4_i+=1
 
 
 
@@ -290,12 +300,65 @@ print("\nlog decorator (class):")
 wrapped2 = log(PasswordGenerator, "ERROR")
 print(next(wrapped2(8, 3)))
 
-print("\nlog decorator (function, @header): ")
-@log
-def forall2(pred, iterable):
-    counter = 0
-    for i in iterable:
-        if pred(i): counter+=1
-    return (counter/len(iterable))==1
 
-forall2(dodatnia, lista_dodatnich)
+
+
+
+
+##dodatkowe testy:
+##z6 @log
+#print("\nlog decorator (function, @header): ")
+#@log
+#def forall2(pred, iterable):
+#    counter = 0
+#    for i in iterable:
+#        if pred(i): counter+=1
+#    return (counter/len(iterable))==1
+#
+#forall2(dodatnia, lista_dodatnich)
+#
+##z5 @cache using time_in
+#@cache
+#def fibonacci_v2(n):
+#    a, b = 0, 1
+#    i = 1
+#    while i<=n:
+#        a, b = b, a+b
+#        i+=1
+#    return b
+#
+#def time_in(func):
+#    def wrapper(*args, **kwargs):
+#        name = func.__qualname__
+#        start = time.perf_counter()
+#        result = func(*args, **kwargs)
+#        end = time.perf_counter()
+#        print("{}: elapsed time: {}".format(name, (end-start)))
+#        return result
+#    return wrapper
+#
+#
+#print("\nlog decorator (function + no @cache): ")
+#fib1 = time_in(fibonacci)
+#fib1(10000)
+#fib1(10000)
+#
+#print("\nlog decorator (function + @cache): ")
+#fib2 = time_in(fibonacci_v2)
+#fib2(10000)
+#fib2(10000)
+#
+#print("\ntime_in decorator (generator + @cache): ")
+#gen4 = make_generator_mem(fibonacci)()
+#@time_in
+#def iterating_mem_gen(n, gener):
+#    temp = 1
+#    
+#    for x in iter(gener):
+#        x
+#        if(temp>=n):break
+#        temp+=1
+#
+#iterating_mem_gen(10000, gen4)
+#gen5 = make_generator_mem(fibonacci)()
+#iterating_mem_gen(10000, gen5)
